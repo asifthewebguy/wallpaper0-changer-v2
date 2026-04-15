@@ -21,4 +21,24 @@ void main() {
     final theme = AppTheme.dark();
     expect(theme.scaffoldBackgroundColor, AppColors.base);
   });
+
+  test('AppTheme.dark colorScheme primary matches AppColors.primary', () {
+    final theme = AppTheme.dark();
+    expect(theme.colorScheme.primary, AppColors.primary);
+  });
+
+  test('AppTheme.dark colorScheme outline matches AppColors.border', () {
+    final theme = AppTheme.dark();
+    expect(theme.colorScheme.outline, AppColors.border);
+  });
+
+  test('AppTheme.dark cardTheme elevation is zero', () {
+    final theme = AppTheme.dark();
+    expect(theme.cardTheme.elevation, 0);
+  });
+
+  test('AppTheme.dark inputDecorationTheme is filled', () {
+    final theme = AppTheme.dark();
+    expect(theme.inputDecorationTheme.filled, true);
+  });
 }

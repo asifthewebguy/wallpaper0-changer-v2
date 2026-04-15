@@ -15,6 +15,8 @@ abstract final class AppTheme {
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onSurface: AppColors.textPrimary,
+        onError: Colors.white,
+        outline: AppColors.border,
       ),
       cardTheme: CardThemeData(
         color: AppColors.card,
@@ -62,10 +64,16 @@ abstract final class AppTheme {
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       ),
-      textTheme: base.textTheme.apply(
-        bodyColor: AppColors.textPrimary,
-        displayColor: AppColors.textPrimary,
-      ),
+      textTheme: base.textTheme
+          .apply(
+            bodyColor: AppColors.textPrimary,
+            displayColor: AppColors.textPrimary,
+          )
+          .copyWith(
+            labelLarge: base.textTheme.labelLarge?.copyWith(color: AppColors.textPrimary),
+            labelMedium: base.textTheme.labelMedium?.copyWith(color: AppColors.textPrimary),
+            labelSmall: base.textTheme.labelSmall?.copyWith(color: AppColors.textPrimary),
+          ),
     );
   }
 }
