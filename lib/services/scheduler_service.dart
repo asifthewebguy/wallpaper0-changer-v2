@@ -31,6 +31,8 @@ class SchedulerService {
 
   DateTime? get nextFireAt {
     if (_startedAt == null || _interval == null) return null;
+    if (!isRunning) return null;
+    if (_interval!.inMicroseconds == 0) return _startedAt;
     final elapsed = DateTime.now().difference(_startedAt!);
     final ticksDone = elapsed.inMicroseconds ~/ _interval!.inMicroseconds;
     return _startedAt!.add(_interval! * (ticksDone + 1));

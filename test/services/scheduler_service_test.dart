@@ -44,11 +44,11 @@ void main() {
   test('onTick is called when timer fires', () async {
     int ticks = 0;
     scheduler.start(
-      interval: const Duration(milliseconds: 50),
+      interval: const Duration(milliseconds: 25),
       onTick: () async { ticks++; },
     );
-    await Future.delayed(const Duration(milliseconds: 130));
-    expect(ticks, greaterThanOrEqualTo(2));
+    await Future.delayed(const Duration(milliseconds: 150));
+    expect(ticks, greaterThanOrEqualTo(4));
   });
 
   test('reset restarts with new interval', () {
