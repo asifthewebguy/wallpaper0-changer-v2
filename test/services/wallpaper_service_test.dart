@@ -48,7 +48,7 @@ void main() {
     mockNotifier = MockAppNotifier();
     mockSource = MockWallpaperSource();
 
-    when(() => mockCache.getOrDownload(any(), any()))
+    when(() => mockCache.getOrDownload(any(), any(), cacheSizeLimitMb: any(named: 'cacheSizeLimitMb')))
         .thenAnswer((_) async => '/tmp/photo.jpg');
     when(() => mockSetter.set(any())).thenAnswer((_) async {});
     when(() => mockCache.recordHistory(any())).thenAnswer((_) async {});
@@ -66,7 +66,7 @@ void main() {
     await service.setWallpaper(_image, mockSource);
 
     verifyInOrder([
-      () => mockCache.getOrDownload(any(), any()),
+      () => mockCache.getOrDownload(any(), any(), cacheSizeLimitMb: any(named: 'cacheSizeLimitMb')),
       () => mockSetter.set('/tmp/photo.jpg'),
       () => mockCache.recordHistory(_image),
       () => mockNotifier.show('Wallpaper updated'),
@@ -87,6 +87,6 @@ void main() {
       () => service.setWallpaper(bad, mockSource),
       throwsA(isA<ValidationException>()),
     );
-    verifyNever(() => mockCache.getOrDownload(any(), any()));
+    verifyNever(() => mockCache.getOrDownload(any(), any(), cacheSizeLimitMb: any(named: 'cacheSizeLimitMb')));
   });
 }
