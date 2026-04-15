@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'app.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MaterialApp(home: Scaffold(body: Center(child: Text('Wallpaper Changer')))));
+  runApp(const ProviderScope(child: WallpaperChangerApp()));
 }
