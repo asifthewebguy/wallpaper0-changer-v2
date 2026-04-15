@@ -1,0 +1,33 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:wallpaper_changer/models/wallpaper_image.dart';
+
+void main() {
+  const image = WallpaperImage(
+    id: 'test.jpg',
+    sourceId: 'aiwpme',
+    thumbnailUrl: 'https://example.com/thumb.jpg',
+    downloadUrl: 'https://example.com/full.jpg',
+    width: 1920,
+    height: 1080,
+    format: 'jpg',
+  );
+
+  test('fromJson round-trips toJson', () {
+    final json = image.toJson();
+    final restored = WallpaperImage.fromJson(json);
+    expect(restored.id, image.id);
+    expect(restored.sourceId, image.sourceId);
+    expect(restored.thumbnailUrl, image.thumbnailUrl);
+    expect(restored.downloadUrl, image.downloadUrl);
+    expect(restored.width, image.width);
+    expect(restored.height, image.height);
+    expect(restored.format, image.format);
+  });
+
+  test('copyWith replaces specified fields', () {
+    final copy = image.copyWith(sourceId: 'unsplash', width: 2560);
+    expect(copy.sourceId, 'unsplash');
+    expect(copy.width, 2560);
+    expect(copy.id, image.id);
+  });
+}
