@@ -44,22 +44,34 @@ class AppSettings {
     return m;
   }
 
+  // Sentinel used by copyWith to distinguish "not provided" from explicit null.
+  static const _absent = Object();
+
   AppSettings copyWith({
     int? schedulerIntervalMinutes,
     List<String>? activeSourceIds,
-    String? unsplashApiKey,
-    String? wallhavenApiKey,
-    String? linuxWallpaperCommand,
+    Object? unsplashApiKey = _absent,
+    Object? wallhavenApiKey = _absent,
+    Object? linuxWallpaperCommand = _absent,
     int? cacheSizeLimitMb,
-    String? localFolderPath,
+    Object? localFolderPath = _absent,
   }) =>
       AppSettings(
-        schedulerIntervalMinutes: schedulerIntervalMinutes ?? this.schedulerIntervalMinutes,
+        schedulerIntervalMinutes:
+            schedulerIntervalMinutes ?? this.schedulerIntervalMinutes,
         activeSourceIds: activeSourceIds ?? this.activeSourceIds,
-        unsplashApiKey: unsplashApiKey ?? this.unsplashApiKey,
-        wallhavenApiKey: wallhavenApiKey ?? this.wallhavenApiKey,
-        linuxWallpaperCommand: linuxWallpaperCommand ?? this.linuxWallpaperCommand,
+        unsplashApiKey: unsplashApiKey == _absent
+            ? this.unsplashApiKey
+            : unsplashApiKey as String?,
+        wallhavenApiKey: wallhavenApiKey == _absent
+            ? this.wallhavenApiKey
+            : wallhavenApiKey as String?,
+        linuxWallpaperCommand: linuxWallpaperCommand == _absent
+            ? this.linuxWallpaperCommand
+            : linuxWallpaperCommand as String?,
         cacheSizeLimitMb: cacheSizeLimitMb ?? this.cacheSizeLimitMb,
-        localFolderPath: localFolderPath ?? this.localFolderPath,
+        localFolderPath: localFolderPath == _absent
+            ? this.localFolderPath
+            : localFolderPath as String?,
       );
 }

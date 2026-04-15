@@ -37,4 +37,12 @@ void main() {
     expect(updated.unsplashApiKey, 'key');
     expect(updated.cacheSizeLimitMb, 500);
   });
+
+  test('copyWith can clear nullable fields to null', () {
+    final s = AppSettings(unsplashApiKey: 'key', localFolderPath: '/photos');
+    final cleared = s.copyWith(unsplashApiKey: null, localFolderPath: null);
+    expect(cleared.unsplashApiKey, isNull);
+    expect(cleared.localFolderPath, isNull);
+    expect(cleared.schedulerIntervalMinutes, 30); // unrelated fields preserved
+  });
 }
