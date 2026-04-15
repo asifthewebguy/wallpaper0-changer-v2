@@ -7,7 +7,7 @@ class ScheduleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Schedule', style: TextStyle(color: AppColors.textSecondary)),
+      child: Text('Schedule Screen', style: TextStyle(color: AppColors.textSecondary)),
     );
   }
 }

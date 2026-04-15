@@ -7,7 +7,7 @@ class SourcesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Sources', style: TextStyle(color: AppColors.textSecondary)),
+      child: Text('Sources Screen', style: TextStyle(color: AppColors.textSecondary)),
     );
   }
 }

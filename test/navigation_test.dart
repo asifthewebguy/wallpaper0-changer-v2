@@ -8,7 +8,8 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: WallpaperChangerApp()));
     await tester.pumpAndSettle();
     expect(find.byType(NavigationBar), findsOneWidget);
-    expect(find.text('Discover'), findsWidgets);
+    expect(find.text('Discover Screen'), findsOneWidget); // body content
+    expect(find.text('Discover'), findsWidgets);  // nav label
     expect(find.text('History'), findsWidgets);
     expect(find.text('Schedule'), findsWidgets);
     expect(find.text('Sources'), findsWidgets);
@@ -18,9 +19,13 @@ void main() {
   testWidgets('tapping History nav item switches screen', (tester) async {
     await tester.pumpWidget(const ProviderScope(child: WallpaperChangerApp()));
     await tester.pumpAndSettle();
-    final historyItems = find.text('History');
-    await tester.tap(historyItems.last);
+    // Initially on Discover
+    expect(find.text('Discover Screen'), findsOneWidget);
+    // Tap History nav destination
+    await tester.tap(find.text('History').last);
     await tester.pumpAndSettle();
-    expect(find.text('History'), findsWidgets);
+    // Now on History screen
+    expect(find.text('History Screen'), findsOneWidget);
+    expect(find.text('Discover Screen'), findsNothing);
   });
 }

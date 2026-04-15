@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'theme/app_colors.dart';
 import 'theme/app_theme.dart';
 import 'features/discover/discover_screen.dart';
@@ -22,23 +21,15 @@ class WallpaperChangerApp extends StatelessWidget {
   }
 }
 
-class _AppShell extends ConsumerStatefulWidget {
+class _AppShell extends StatefulWidget {
   const _AppShell();
 
   @override
-  ConsumerState<_AppShell> createState() => _AppShellState();
+  State<_AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends ConsumerState<_AppShell> {
+class _AppShellState extends State<_AppShell> {
   int _selectedIndex = 0;
-
-  static const _screens = [
-    DiscoverScreen(),
-    HistoryScreen(),
-    ScheduleScreen(),
-    SourcesScreen(),
-    SettingsScreen(),
-  ];
 
   static const _destinations = [
     NavigationDestination(icon: Icon(Icons.explore_outlined), selectedIcon: Icon(Icons.explore), label: 'Discover'),
@@ -78,7 +69,7 @@ class _AppShellState extends ConsumerState<_AppShell> {
             ),
             const SizedBox(width: 10),
             const Text(
-              'Wallpaper',
+              'Wallpaper Changer',
               style: TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 14,
@@ -99,7 +90,16 @@ class _AppShellState extends ConsumerState<_AppShell> {
           ),
         ),
       ),
-      body: _screens[_selectedIndex],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: const [
+          DiscoverScreen(),
+          HistoryScreen(),
+          ScheduleScreen(),
+          SourcesScreen(),
+          SettingsScreen(),
+        ],
+      ),
     );
   }
 }

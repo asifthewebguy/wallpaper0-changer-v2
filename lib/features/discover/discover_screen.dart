@@ -7,7 +7,7 @@ class DiscoverScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Discover', style: TextStyle(color: AppColors.textSecondary)),
+      child: Text('Discover Screen', style: TextStyle(color: AppColors.textSecondary)),
     );
   }
 }
