@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
+import '../models/exceptions.dart';
 import '../models/wallpaper_image.dart';
 import 'wallpaper_source.dart';
 
@@ -61,10 +62,9 @@ class AiwpmeSource implements WallpaperSource {
     );
     final randomId = response.data!['id'] as String;
     final all = await _fetchAll();
-    return all.firstWhere(
-      (img) => img.id == randomId,
-      orElse: () => all.first,
-    );
+    final match = all.where((img) => img.id == randomId).firstOrNull;
+    if (match == null) throw DownloadException('Random image id "$randomId" not found in catalog');
+    return match;
   }
 
   @override
