@@ -17,6 +17,7 @@ abstract final class ValidationService {
       _requireHttps(image.thumbnailUrl, 'thumbnailUrl');
       _requireHttps(image.downloadUrl, 'downloadUrl');
     } else {
+      validateLocalPath(image.thumbnailUrl);
       validateLocalPath(image.downloadUrl);
     }
   }

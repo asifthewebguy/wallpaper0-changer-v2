@@ -47,6 +47,22 @@ void main() {
       );
       expect(() => ValidationService.validateImage(local), returnsNormally);
     });
+
+    test('throws for local-source image with traversal in thumbnailUrl', () {
+      const bad = WallpaperImage(
+        id: 'local_x.jpg',
+        sourceId: 'local',
+        thumbnailUrl: '/home/user/../etc/shadow',
+        downloadUrl: '/home/user/wallpapers/photo.jpg',
+        width: 0,
+        height: 0,
+        format: 'jpg',
+      );
+      expect(
+        () => ValidationService.validateImage(bad),
+        throwsA(isA<ValidationException>()),
+      );
+    });
   });
 
   group('validateLocalPath', () {
