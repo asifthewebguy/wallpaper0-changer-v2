@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import '../models/exceptions.dart';
@@ -9,9 +10,12 @@ class AiwpmeSource implements WallpaperSource {
   static const _pageSize = 40;
 
   final Dio _dio;
+  final Random _random;
   List<WallpaperImage>? _cache;
 
-  AiwpmeSource({Dio? dio}) : _dio = dio ?? Dio();
+  AiwpmeSource({Dio? dio, Random? random})
+      : _dio = dio ?? Dio(),
+        _random = random ?? Random();
 
   @override
   String get id => 'aiwpme';
@@ -57,14 +61,9 @@ class AiwpmeSource implements WallpaperSource {
 
   @override
   Future<WallpaperImage> getRandom() async {
-    final response = await _dio.get<Map<String, dynamic>>(
-      '$_base/api/random/index.html',
-    );
-    final randomId = response.data!['id'] as String;
     final all = await _fetchAll();
-    final match = all.where((img) => img.id == randomId).firstOrNull;
-    if (match == null) throw DownloadException('Random image id "$randomId" not found in catalog');
-    return match;
+    if (all.isEmpty) throw const DownloadException('aiwp.me catalog is empty');
+    return all[_random.nextInt(all.length)];
   }
 
   @override

@@ -1,9 +1,22 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wallpaper_changer/sources/aiwpme_source.dart';
 
 class MockDio extends Mock implements Dio {}
+
+class _SeededRandom implements Random {
+  _SeededRandom(this._value);
+  final int _value;
+  @override
+  int nextInt(int max) => _value % max;
+  @override
+  bool nextBool() => _value.isOdd;
+  @override
+  double nextDouble() => 0.0;
+}
 
 final _fakeImageData = [
   {
@@ -74,22 +87,19 @@ void main() {
         )).called(1);
   });
 
-  test('getRandom returns an image matching the random id', () async {
-    when(() => mockDio.get<Map<String, dynamic>>(
-          'https://aiwp.me/api/random/index.html',
+  test('getRandom picks an image from the catalog (no HTML endpoint call)', () async {
+    final seeded = AiwpmeSource(dio: mockDio, random: _SeededRandom(1));
+    final image = await seeded.getRandom();
+    expect(image.id, 'DEF456.jpg');
+
+    verifyNever(() => mockDio.get<Map<String, dynamic>>(
+          any(),
           data: any(named: 'data'),
           queryParameters: any(named: 'queryParameters'),
           options: any(named: 'options'),
           cancelToken: any(named: 'cancelToken'),
           onReceiveProgress: any(named: 'onReceiveProgress'),
-        )).thenAnswer((_) async => Response<Map<String, dynamic>>(
-          data: {'id': 'DEF456.jpg'},
-          statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
         ));
-
-    final image = await source.getRandom();
-    expect(image.id, 'DEF456.jpg');
   });
 
   test('id and displayName are correct', () {
