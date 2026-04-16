@@ -23,7 +23,9 @@ class WallpaperPlugin: NSObject, FlutterPlugin {
       return
     }
     guard let screen = NSScreen.main else {
-      result("No main screen available")
+      result(FlutterError(code: "NO_SCREEN",
+                          message: "No main screen available",
+                          details: nil))
       return
     }
     let url = URL(fileURLWithPath: path)

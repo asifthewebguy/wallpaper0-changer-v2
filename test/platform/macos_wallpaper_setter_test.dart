@@ -56,4 +56,19 @@ void main() {
           .having((e) => e.code, 'code', 'INVALID_ARGUMENT')),
     );
   });
+
+  test('set propagates NO_SCREEN PlatformException from channel', () async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async {
+      throw PlatformException(
+          code: 'NO_SCREEN', message: 'No main screen available');
+    });
+
+    final setter = MacosWallpaperSetter();
+    await expectLater(
+      setter.set('/some/path.jpg'),
+      throwsA(isA<PlatformException>()
+          .having((e) => e.code, 'code', 'NO_SCREEN')),
+    );
+  });
 }
