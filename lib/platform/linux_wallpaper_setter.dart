@@ -29,7 +29,7 @@ class LinuxWallpaperSetter implements WallpaperSetter {
   }
 
   Future<void> _gnomeSet(String path) async {
-    final uri = 'file://$path';
+    final uri = Uri.file(path).toString();
     for (final key in ['picture-uri', 'picture-uri-dark']) {
       final result = await _run('gsettings', [
         'set', 'org.gnome.desktop.background', key, uri,
@@ -37,7 +37,7 @@ class LinuxWallpaperSetter implements WallpaperSetter {
       if (result.exitCode != 0) {
         throw PlatformException(
           code: 'SET_FAILED',
-          message: result.stderr as String,
+          message: result.stderr.toString(),
         );
       }
     }
@@ -48,7 +48,7 @@ class LinuxWallpaperSetter implements WallpaperSetter {
     if (result.exitCode != 0) {
       throw PlatformException(
         code: 'SET_FAILED',
-        message: result.stderr as String,
+        message: result.stderr.toString(),
       );
     }
   }
@@ -58,7 +58,7 @@ class LinuxWallpaperSetter implements WallpaperSetter {
     if (result.exitCode != 0) {
       throw PlatformException(
         code: 'SET_FAILED',
-        message: result.stderr as String,
+        message: result.stderr.toString(),
       );
     }
   }
