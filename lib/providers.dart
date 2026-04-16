@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'models/app_settings.dart';
 import 'platform/app_notifier.dart';
+import 'platform/local_notifier_app_notifier.dart';
+import 'platform/protocol_registrar.dart';
 import 'platform/wallpaper_setter.dart';
+import 'platform/windows_protocol_registrar.dart';
+import 'platform/windows_wallpaper_setter.dart';
 import 'services/cache_manager.dart';
 import 'services/config_service.dart';
 import 'services/scheduler_service.dart';
@@ -26,11 +32,17 @@ final cacheManagerProvider = Provider<CacheManager>((ref) {
 final schedulerServiceProvider =
     Provider<SchedulerService>((ref) => SchedulerService());
 
-final wallpaperSetterProvider =
-    Provider<WallpaperSetter>((ref) => StubWallpaperSetter());
+final wallpaperSetterProvider = Provider<WallpaperSetter>((ref) =>
+    Platform.isWindows ? WindowsWallpaperSetter() : StubWallpaperSetter());
 
-final appNotifierProvider =
-    Provider<AppNotifier>((ref) => StubAppNotifier());
+final appNotifierProvider = Provider<AppNotifier>((ref) => Platform.isWindows
+    ? LocalNotifierAppNotifier()
+    : StubAppNotifier());
+
+final protocolRegistrarProvider = Provider<ProtocolRegistrar>((ref) =>
+    Platform.isWindows
+        ? WindowsProtocolRegistrar()
+        : StubProtocolRegistrar());
 
 // ── Settings ─────────────────────────────────────────────────────────────────
 
