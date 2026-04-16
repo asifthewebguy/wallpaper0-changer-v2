@@ -28,7 +28,13 @@ class LinuxProtocolRegistrar implements ProtocolRegistrar {
 
   @override
   Future<void> register() async {
-    final home = _environment['HOME'] ?? '';
+    final home = _environment['HOME'];
+    if (home == null || home.isEmpty) {
+      throw PlatformException(
+        code: 'NO_HOME',
+        message: 'HOME environment variable is not set',
+      );
+    }
     final desktopDir = '$home/.local/share/applications';
     final desktopPath = '$desktopDir/wallpaper0-changer.desktop';
 

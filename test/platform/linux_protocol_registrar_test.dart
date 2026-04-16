@@ -91,5 +91,20 @@ void main() {
       // Should complete without throwing
       await expectLater(registrar.register(), completes);
     });
+
+    test('missing HOME throws PlatformException with NO_HOME code', () async {
+      final registrar = LinuxProtocolRegistrar(
+        processRunner: (exe, args) async => ProcessResult(0, 0, '', ''),
+        fileWriter: (path, content) async {},
+        environment: {},
+        resolvedExecutable: '/usr/bin/wallpaper_changer',
+      );
+
+      await expectLater(
+        registrar.register(),
+        throwsA(isA<PlatformException>()
+            .having((e) => e.code, 'code', 'NO_HOME')),
+      );
+    });
   });
 }
