@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpaper_changer/app.dart';
 import 'package:wallpaper_changer/features/discover/discover_provider.dart';
 import 'package:wallpaper_changer/features/history/history_provider.dart';
+import 'package:wallpaper_changer/features/schedule/schedule_provider.dart';
+import 'package:wallpaper_changer/features/schedule/schedule_state.dart';
 import 'package:wallpaper_changer/models/wallpaper_image.dart';
 import 'package:wallpaper_changer/providers.dart';
 import 'package:wallpaper_changer/sources/wallpaper_source.dart';
@@ -25,6 +27,12 @@ class FakeHistoryNotifier extends HistoryNotifier {
   Future<List<WallpaperImage>> build() async => [];
 }
 
+class FakeScheduleNotifier extends ScheduleNotifier {
+  @override
+  Future<ScheduleState> build() async =>
+      const ScheduleState(isEnabled: false, intervalMinutes: 30);
+}
+
 List<Override> _overrides() {
   final src = MockWallpaperSource();
   when(() => src.id).thenReturn('aiwpme');
@@ -32,6 +40,7 @@ List<Override> _overrides() {
   return [
     discoverProvider.overrideWith(() => FakeDiscoverNotifier()),
     historyProvider.overrideWith(() => FakeHistoryNotifier()),
+    scheduleProvider.overrideWith(() => FakeScheduleNotifier()),
     allSourcesProvider.overrideWithValue({'aiwpme': src}),
     selectedSourceProvider.overrideWith((ref) => 'aiwpme'),
   ];
