@@ -6,6 +6,7 @@ import 'package:wallpaper_changer/features/discover/discover_provider.dart';
 import 'package:wallpaper_changer/features/history/history_provider.dart';
 import 'package:wallpaper_changer/features/schedule/schedule_provider.dart';
 import 'package:wallpaper_changer/features/schedule/schedule_state.dart';
+import 'package:wallpaper_changer/features/settings/settings_provider.dart';
 import 'package:wallpaper_changer/models/app_settings.dart';
 import 'package:wallpaper_changer/models/wallpaper_image.dart';
 import 'package:wallpaper_changer/providers.dart';
@@ -34,6 +35,11 @@ class FakeScheduleNotifier extends ScheduleNotifier {
       const ScheduleState(isEnabled: false, intervalMinutes: 30);
 }
 
+class _FakeSettingsNotifier extends SettingsNotifier {
+  @override
+  Future<AppSettings> build() async => const AppSettings();
+}
+
 List<Override> _overrides() {
   final src = MockWallpaperSource();
   when(() => src.id).thenReturn('aiwpme');
@@ -42,6 +48,7 @@ List<Override> _overrides() {
     discoverProvider.overrideWith(() => FakeDiscoverNotifier()),
     historyProvider.overrideWith(() => FakeHistoryNotifier()),
     scheduleProvider.overrideWith(() => FakeScheduleNotifier()),
+    settingsProvider.overrideWith(() => _FakeSettingsNotifier()),
     scheduleCountdownProvider.overrideWith((ref) => const Stream<Duration>.empty()),
     appSettingsProvider.overrideWith((ref) async => const AppSettings()),
     allSourcesProvider.overrideWithValue({'aiwpme': src}),
