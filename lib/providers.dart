@@ -27,6 +27,8 @@ import 'sources/wallpaper_source.dart';
 
 final dioProvider = Provider<Dio>((ref) => Dio());
 
+final selectedSourceProvider = StateProvider<String>((ref) => 'aiwpme');
+
 final configServiceProvider = Provider<ConfigService>((ref) => ConfigService());
 
 final cacheManagerProvider = Provider<CacheManager>((ref) {
