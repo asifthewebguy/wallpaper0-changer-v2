@@ -61,7 +61,12 @@ void main() {
           ),
         ),
       );
-      expect(find.byType(Text), findsNothing);
+      // No caption should appear when caption is null
+      final textWidgets = find.descendant(
+        of: find.byType(WallpaperCard),
+        matching: find.byType(Text),
+      );
+      expect(textWidgets, findsNothing);
     });
 
     testWidgets('fires onTap when tapped', (tester) async {

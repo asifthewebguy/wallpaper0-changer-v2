@@ -29,15 +29,17 @@ class WallpaperCard extends StatelessWidget {
                 border: Border.all(color: AppColors.border),
                 color: AppColors.card,
               ),
-              clipBehavior: Clip.antiAlias,
-              child: CachedNetworkImage(
-                imageUrl: image.thumbnailUrl,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-                errorWidget: (context, url, error) => const Center(
-                  child: Icon(Icons.broken_image, color: AppColors.textMuted),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(7),
+                child: CachedNetworkImage(
+                  imageUrl: image.thumbnailUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  errorWidget: (context, url, error) => const Center(
+                    child: Icon(Icons.broken_image, color: AppColors.textMuted),
+                  ),
                 ),
               ),
             ),
