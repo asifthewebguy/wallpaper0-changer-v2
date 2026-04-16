@@ -29,6 +29,10 @@ final dioProvider = Provider<Dio>((ref) => Dio());
 
 final selectedSourceProvider = StateProvider<String>((ref) => 'aiwpme');
 
+final currentPageIndexProvider = StateProvider<int>((ref) => 0);
+
+final settingsScrollTargetProvider = StateProvider<String?>((ref) => null);
+
 final configServiceProvider = Provider<ConfigService>((ref) => ConfigService());
 
 final cacheManagerProvider = Provider<CacheManager>((ref) {

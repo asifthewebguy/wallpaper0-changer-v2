@@ -65,4 +65,18 @@ void main() {
     expect(find.text('No wallpapers set yet'), findsOneWidget);
     expect(find.text('Discover'), findsWidgets); // nav label still present
   });
+
+  testWidgets('writing to currentPageIndexProvider switches screen',
+      (tester) async {
+    final container = ProviderContainer(overrides: _overrides());
+    addTearDown(container.dispose);
+    await tester.pumpWidget(UncontrolledProviderScope(
+      container: container,
+      child: const WallpaperChangerApp(),
+    ));
+    await tester.pumpAndSettle();
+    container.read(currentPageIndexProvider.notifier).state = 1;
+    await tester.pumpAndSettle();
+    expect(find.text('No wallpapers set yet'), findsOneWidget);
+  });
 }

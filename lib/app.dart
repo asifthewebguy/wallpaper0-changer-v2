@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'theme/app_colors.dart';
 import 'theme/app_theme.dart';
 import 'features/discover/discover_screen.dart';
@@ -6,6 +7,7 @@ import 'features/history/history_screen.dart';
 import 'features/schedule/schedule_screen.dart';
 import 'features/sources/sources_screen.dart';
 import 'features/settings/settings_screen.dart';
+import 'providers.dart';
 
 class WallpaperChangerApp extends StatelessWidget {
   const WallpaperChangerApp({super.key});
@@ -21,15 +23,8 @@ class WallpaperChangerApp extends StatelessWidget {
   }
 }
 
-class _AppShell extends StatefulWidget {
+class _AppShell extends ConsumerWidget {
   const _AppShell();
-
-  @override
-  State<_AppShell> createState() => _AppShellState();
-}
-
-class _AppShellState extends State<_AppShell> {
-  int _selectedIndex = 0;
 
   static const _destinations = [
     NavigationDestination(icon: Icon(Icons.explore_outlined), selectedIcon: Icon(Icons.explore), label: 'Discover'),
@@ -40,7 +35,8 @@ class _AppShellState extends State<_AppShell> {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedIndex = ref.watch(currentPageIndexProvider);
     return Scaffold(
       backgroundColor: AppColors.base,
       appBar: AppBar(
@@ -82,8 +78,9 @@ class _AppShellState extends State<_AppShell> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(kBottomNavigationBarHeight),
           child: NavigationBar(
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: (i) => setState(() => _selectedIndex = i),
+            selectedIndex: selectedIndex,
+            onDestinationSelected: (i) =>
+                ref.read(currentPageIndexProvider.notifier).state = i,
             destinations: _destinations,
             backgroundColor: AppColors.surface,
             height: kBottomNavigationBarHeight,
@@ -91,7 +88,7 @@ class _AppShellState extends State<_AppShell> {
         ),
       ),
       body: IndexedStack(
-        index: _selectedIndex,
+        index: selectedIndex,
         children: const [
           DiscoverScreen(),
           HistoryScreen(),
