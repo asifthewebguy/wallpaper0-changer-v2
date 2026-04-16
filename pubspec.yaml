@@ -1,7 +1,7 @@
 name: wallpaper_changer
 description: Cross-platform wallpaper changer — Windows, Linux, macOS
 publish_to: none
-version: 2.0.0-beta.1+1
+version: 2.0.0-beta.2+2
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
