@@ -99,7 +99,7 @@ class CacheManager {
             .toList();
       } catch (_) {}
     }
-    history.insert(0, image);
+    history.insert(0, image.copyWith(setAt: DateTime.now()));
     if (history.length > 500) history = history.take(500).toList();
     await file
         .writeAsString(jsonEncode(history.map((e) => e.toJson()).toList()));

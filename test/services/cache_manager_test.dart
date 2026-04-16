@@ -126,4 +126,58 @@ void main() {
     expect(await file1.exists(), isFalse); // old evicted
     expect(await file2.exists(), isTrue);  // new kept
   });
+
+  group('CacheManager.recordHistory', () {
+    test('recordHistory stamps setAt with current time', () async {
+      const image = WallpaperImage(
+        id: 'img1',
+        sourceId: 'aiwpme',
+        thumbnailUrl: 'https://example.com/t.jpg',
+        downloadUrl: 'https://example.com/f.jpg',
+        width: 1920,
+        height: 1080,
+        format: 'jpg',
+      );
+
+      final before = DateTime.now().subtract(const Duration(seconds: 1));
+      await cache.recordHistory(image);
+      final after = DateTime.now().add(const Duration(seconds: 1));
+
+      final history = await cache.getHistory();
+      expect(history.first.setAt, isNotNull);
+      expect(history.first.setAt!.isAfter(before), isTrue);
+      expect(history.first.setAt!.isBefore(after), isTrue);
+    });
+
+    test('recordHistory preserves existing setAt on subsequent entries', () async {
+      const image1 = WallpaperImage(
+        id: 'img1',
+        sourceId: 'aiwpme',
+        thumbnailUrl: 'https://example.com/t1.jpg',
+        downloadUrl: 'https://example.com/f1.jpg',
+        width: 1920,
+        height: 1080,
+        format: 'jpg',
+      );
+      const image2 = WallpaperImage(
+        id: 'img2',
+        sourceId: 'aiwpme',
+        thumbnailUrl: 'https://example.com/t2.jpg',
+        downloadUrl: 'https://example.com/f2.jpg',
+        width: 1920,
+        height: 1080,
+        format: 'jpg',
+      );
+
+      await cache.recordHistory(image1);
+      await cache.recordHistory(image2);
+
+      final history = await cache.getHistory();
+      expect(history.length, 2);
+      expect(history[0].id, 'img2'); // most recent first
+      expect(history[0].setAt, isNotNull);
+      expect(history[1].id, 'img1');
+      expect(history[1].setAt, isNotNull);
+    });
+  });
 }
