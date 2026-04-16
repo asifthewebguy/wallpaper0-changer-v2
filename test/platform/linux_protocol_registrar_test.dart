@@ -92,6 +92,23 @@ void main() {
       await expectLater(registrar.register(), completes);
     });
 
+    test('register passes correct desktop path to fileWriter', () async {
+      String? capturedPath;
+      final registrar = LinuxProtocolRegistrar(
+        processRunner: (exe, args) async => ProcessResult(0, 0, '', ''),
+        fileWriter: (path, content) async {
+          capturedPath = path;
+        },
+        environment: {'HOME': '/home/newuser'},
+        resolvedExecutable: '/usr/bin/wallpaper_changer',
+      );
+
+      await registrar.register();
+
+      expect(capturedPath,
+          '/home/newuser/.local/share/applications/wallpaper0-changer.desktop');
+    });
+
     test('missing HOME throws PlatformException with NO_HOME code', () async {
       final registrar = LinuxProtocolRegistrar(
         processRunner: (exe, args) async => ProcessResult(0, 0, '', ''),

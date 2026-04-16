@@ -18,8 +18,11 @@ class LinuxProtocolRegistrar implements ProtocolRegistrar {
         _resolvedExecutable =
             resolvedExecutable ?? Platform.resolvedExecutable;
 
-  static Future<void> _defaultFileWriter(String path, String content) =>
-      File(path).writeAsString(content);
+  static Future<void> _defaultFileWriter(String path, String content) async {
+    final file = File(path);
+    await file.parent.create(recursive: true);
+    await file.writeAsString(content);
+  }
 
   final ProcessRunner _run;
   final FileWriter _writeFile;
