@@ -46,8 +46,11 @@ class _WallpaperGridState extends State<WallpaperGrid> {
     final pos = _scrollController.position;
     if (pos.pixels >= pos.maxScrollExtent - 200) {
       setState(() => _loadingMore = true);
-      await widget.onLoadMore!();
-      if (mounted) setState(() => _loadingMore = false);
+      try {
+        await widget.onLoadMore?.call();
+      } finally {
+        if (mounted) setState(() => _loadingMore = false);
+      }
     }
   }
 
