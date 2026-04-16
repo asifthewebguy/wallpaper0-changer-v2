@@ -9,6 +9,7 @@ class WallpaperImage {
   final int width;
   final int height;
   final String format;
+  final DateTime? setAt;
 
   const WallpaperImage({
     required this.id,
@@ -18,6 +19,7 @@ class WallpaperImage {
     required this.width,
     required this.height,
     required this.format,
+    this.setAt,
   });
 
   factory WallpaperImage.fromJson(Map<String, dynamic> json) => WallpaperImage(
@@ -28,6 +30,9 @@ class WallpaperImage {
         width: json['width'] as int,
         height: json['height'] as int,
         format: json['format'] as String,
+        setAt: json['setAt'] != null
+            ? DateTime.parse(json['setAt'] as String)
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -38,6 +43,7 @@ class WallpaperImage {
         'width': width,
         'height': height,
         'format': format,
+        if (setAt != null) 'setAt': setAt!.toIso8601String(),
       };
 
   WallpaperImage copyWith({
@@ -48,6 +54,7 @@ class WallpaperImage {
     int? width,
     int? height,
     String? format,
+    DateTime? setAt,
   }) =>
       WallpaperImage(
         id: id ?? this.id,
@@ -57,5 +64,6 @@ class WallpaperImage {
         width: width ?? this.width,
         height: height ?? this.height,
         format: format ?? this.format,
+        setAt: setAt ?? this.setAt,
       );
 }
