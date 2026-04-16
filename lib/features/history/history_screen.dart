@@ -10,10 +10,10 @@ class HistoryScreen extends ConsumerWidget {
 
   static String _timeAgo(DateTime? dt) {
     if (dt == null) return '';
-    final diff = DateTime.now().difference(dt);
-    if (diff.inDays == 0) return 'today';
-    if (diff.inDays == 1) return 'yesterday';
-    return '${diff.inDays} days ago';
+    final days = DateTime.now().difference(dt).inDays.abs();
+    if (days == 0) return 'today';
+    if (days == 1) return 'yesterday';
+    return '$days days ago';
   }
 
   @override
