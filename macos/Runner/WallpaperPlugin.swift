@@ -17,7 +17,9 @@ class WallpaperPlugin: NSObject, FlutterPlugin {
       return
     }
     guard let path = call.arguments as? String else {
-      result("Expected a String path")
+      result(FlutterError(code: "INVALID_ARGUMENT",
+                          message: "Expected a String path",
+                          details: nil))
       return
     }
     guard let screen = NSScreen.main else {

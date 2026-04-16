@@ -41,4 +41,19 @@ void main() {
               'NSWorkspace setDesktopImageURL failed')),
     );
   });
+
+  test('set propagates PlatformException from channel', () async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async {
+      throw PlatformException(
+          code: 'INVALID_ARGUMENT', message: 'Expected a String path');
+    });
+
+    final setter = MacosWallpaperSetter();
+    await expectLater(
+      setter.set('/some/path.jpg'),
+      throwsA(isA<PlatformException>()
+          .having((e) => e.code, 'code', 'INVALID_ARGUMENT')),
+    );
+  });
 }
