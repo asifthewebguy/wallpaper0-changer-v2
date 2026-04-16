@@ -14,7 +14,7 @@ class DiscoverNotifier extends AsyncNotifier<List<WallpaperImage>> {
   Future<List<WallpaperImage>> build() async {
     _page = 1;
     final activeId = ref.watch(selectedSourceProvider);
-    final sources = ref.read(allSourcesProvider);
+    final sources = ref.watch(allSourcesProvider);
     final source = sources[activeId] ?? sources['aiwpme']!;
     return source.browse(page: _page);
   }
@@ -22,11 +22,12 @@ class DiscoverNotifier extends AsyncNotifier<List<WallpaperImage>> {
   Future<void> loadMore() async {
     final current = state.valueOrNull;
     if (current == null) return;
-    _page++;
+    final nextPage = _page + 1;
     final activeId = ref.read(selectedSourceProvider);
     final sources = ref.read(allSourcesProvider);
     final source = sources[activeId] ?? sources['aiwpme']!;
-    final more = await source.browse(page: _page);
+    final more = await source.browse(page: nextPage);
+    _page = nextPage;
     state = AsyncValue.data([...current, ...more]);
   }
 
