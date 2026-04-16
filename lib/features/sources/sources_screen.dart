@@ -131,7 +131,7 @@ class SourcesScreen extends ConsumerWidget {
                         ),
                       Switch(
                         value: isActive,
-                        activeThumbColor: AppColors.primary,
+                        activeColor: AppColors.primary,
                         onChanged: !canToggle
                             ? null
                             : (v) async {

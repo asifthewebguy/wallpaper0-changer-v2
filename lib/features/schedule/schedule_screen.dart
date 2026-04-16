@@ -101,7 +101,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                       children: [
                         Switch(
                           value: state.isEnabled,
-                          activeThumbColor: AppColors.primary,
+                          activeColor: AppColors.primary,
                           onChanged: (v) => _onToggle(v, displayedInterval),
                         ),
                         const SizedBox(width: 12),
