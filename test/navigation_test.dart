@@ -6,6 +6,7 @@ import 'package:wallpaper_changer/features/discover/discover_provider.dart';
 import 'package:wallpaper_changer/features/history/history_provider.dart';
 import 'package:wallpaper_changer/features/schedule/schedule_provider.dart';
 import 'package:wallpaper_changer/features/schedule/schedule_state.dart';
+import 'package:wallpaper_changer/models/app_settings.dart';
 import 'package:wallpaper_changer/models/wallpaper_image.dart';
 import 'package:wallpaper_changer/providers.dart';
 import 'package:wallpaper_changer/sources/wallpaper_source.dart';
@@ -42,6 +43,7 @@ List<Override> _overrides() {
     historyProvider.overrideWith(() => FakeHistoryNotifier()),
     scheduleProvider.overrideWith(() => FakeScheduleNotifier()),
     scheduleCountdownProvider.overrideWith((ref) => const Stream<Duration>.empty()),
+    appSettingsProvider.overrideWith((ref) async => const AppSettings()),
     allSourcesProvider.overrideWithValue({'aiwpme': src}),
     selectedSourceProvider.overrideWith((ref) => 'aiwpme'),
   ];
