@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/app_settings.dart';
+import '../../providers.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/glass_form_field.dart';
 import 'settings_provider.dart';
@@ -16,10 +18,15 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final _cacheController = TextEditingController();
+  final _localFolderController = TextEditingController();
+  final _unsplashKey = GlobalKey();
+  final _wallhavenKey = GlobalKey();
+  final _localFolderKey = GlobalKey();
 
   @override
   void dispose() {
     _cacheController.dispose();
+    _localFolderController.dispose();
     super.dispose();
   }
 
@@ -30,21 +37,62 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     await ref.read(settingsProvider.notifier).save(updated);
   }
 
+  Future<void> _pickFolder() async {
+    final path = await FilePicker.platform.getDirectoryPath();
+    if (path == null) return;
+    _localFolderController.text = path;
+    await _saveWith(_current().copyWith(localFolderPath: path));
+  }
+
+  void _handleScrollTarget(String? target) {
+    if (target == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      GlobalKey? key;
+      switch (target) {
+        case 'unsplash':
+          key = _unsplashKey;
+          break;
+        case 'wallhaven':
+          key = _wallhavenKey;
+          break;
+        case 'local':
+          key = _localFolderKey;
+          break;
+      }
+      final ctx = key?.currentContext;
+      if (ctx != null) {
+        Scrollable.ensureVisible(
+          ctx,
+          duration: const Duration(milliseconds: 300),
+          alignment: 0.1,
+        );
+      }
+      ref.read(settingsScrollTargetProvider.notifier).state = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final settingsAsync = ref.watch(settingsProvider);
+    ref.listen<String?>(settingsScrollTargetProvider, (_, next) {
+      _handleScrollTarget(next);
+    });
 
     return settingsAsync.when(
       data: (settings) {
         if (_cacheController.text != settings.cacheSizeLimitMb.toString()) {
           _cacheController.text = settings.cacheSizeLimitMb.toString();
         }
+        if (_localFolderController.text !=
+            (settings.localFolderPath ?? '')) {
+          _localFolderController.text = settings.localFolderPath ?? '';
+        }
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
             const _SectionHeader('API Keys'),
             GlassFormField(
-              key: const Key('unsplash_key_field'),
+              key: _unsplashKey,
               label: 'Unsplash API Key',
               initialValue: settings.unsplashApiKey ?? '',
               obscureText: true,
@@ -55,7 +103,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             const SizedBox(height: 16),
             GlassFormField(
-              key: const Key('wallhaven_key_field'),
+              key: _wallhavenKey,
               label: 'Wallhaven API Key',
               initialValue: settings.wallhavenApiKey ?? '',
               obscureText: true,
@@ -65,12 +113,40 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ),
             const SizedBox(height: 24),
+            const _SectionHeader('Local Folder'),
+            Row(
+              key: _localFolderKey,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: GlassFormField(
+                    label: 'Folder path',
+                    controller: _localFolderController,
+                    onBlur: (text) => _saveWith(
+                      _current().copyWith(
+                          localFolderPath: text.isEmpty ? null : text),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                OutlinedButton(
+                  onPressed: _pickFolder,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.textPrimary,
+                    side: const BorderSide(color: AppColors.border),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 14),
+                  ),
+                  child: const Text('Browse...'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
             const _SectionHeader('Cache'),
             GlassFormField(
               label: 'Cache size limit (MB)',
-              initialValue: settings.cacheSizeLimitMb.toString(),
-              keyboardType: TextInputType.number,
               controller: _cacheController,
+              keyboardType: TextInputType.number,
               onBlur: (text) async {
                 final parsed = int.tryParse(text);
                 if (parsed == null || parsed < 50) {

@@ -97,4 +97,32 @@ void main() {
     await tester.pump();
     expect(notifier.lastSaved?.unsplashApiKey, isNull);
   });
+
+  testWidgets('renders local folder field and Browse button',
+      (tester) async {
+    final notifier = FakeSettingsNotifier(const AppSettings());
+    await tester.pumpWidget(_wrap(notifier));
+    await tester.pumpAndSettle();
+    expect(find.text('Folder path'), findsOneWidget);
+    expect(find.text('Browse...'), findsOneWidget);
+  });
+
+  testWidgets('blur on local folder field saves path', (tester) async {
+    final notifier = FakeSettingsNotifier(const AppSettings());
+    await tester.pumpWidget(_wrap(notifier));
+    await tester.pumpAndSettle();
+    final folderField = find.ancestor(
+      of: find.text('Folder path'),
+      matching: find.byType(Column),
+    ).first;
+    final textField = find.descendant(
+      of: folderField,
+      matching: find.byType(TextField),
+    );
+    await tester.tap(textField);
+    await tester.enterText(textField, '/tmp/walls');
+    FocusManager.instance.primaryFocus?.unfocus();
+    await tester.pump();
+    expect(notifier.lastSaved?.localFolderPath, '/tmp/walls');
+  });
 }
