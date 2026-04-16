@@ -28,9 +28,10 @@ bool FlutterWindow::OnCreate() {
   }
   RegisterPlugins(flutter_controller_->engine());
   WallpaperPlugin::RegisterWithRegistrar(
-      flutter::PluginRegistrarWindows::GetOrCreateRegistrar(
-          flutter_controller_->engine()->GetRegistrarForPlugin(
-              "WallpaperPlugin")));
+      flutter::PluginRegistrarManager::GetInstance()
+          ->GetRegistrar<flutter::PluginRegistrarWindows>(
+              flutter_controller_->engine()->GetRegistrarForPlugin(
+                  "WallpaperPlugin")));
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
   flutter_controller_->engine()->SetNextFrameCallback([&]() {
