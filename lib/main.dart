@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_notifier/local_notifier.dart';
 import 'app.dart';
+import 'platform/linux_protocol_registrar.dart';
 import 'platform/windows_protocol_registrar.dart';
 
 Future<void> main() async {
@@ -11,9 +12,12 @@ Future<void> main() async {
 
   await localNotifier.setup(appName: 'Wallpaper Changer');
 
-  if (Platform.isWindows) {
+  if (Platform.isWindows || Platform.isLinux) {
+    final registrar = Platform.isWindows
+        ? WindowsProtocolRegistrar()
+        : LinuxProtocolRegistrar();
     try {
-      await WindowsProtocolRegistrar().register();
+      await registrar.register();
     } catch (e) {
       debugPrint('Protocol registration failed: $e');
     }

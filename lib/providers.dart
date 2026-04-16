@@ -7,6 +7,10 @@ import 'platform/app_notifier.dart';
 import 'platform/local_notifier_app_notifier.dart';
 import 'platform/protocol_registrar.dart';
 import 'platform/wallpaper_setter.dart';
+import 'platform/linux_protocol_registrar.dart';
+import 'platform/linux_wallpaper_setter.dart';
+import 'platform/macos_protocol_registrar.dart';
+import 'platform/macos_wallpaper_setter.dart';
 import 'platform/windows_protocol_registrar.dart';
 import 'platform/windows_wallpaper_setter.dart';
 import 'services/cache_manager.dart';
@@ -32,17 +36,22 @@ final cacheManagerProvider = Provider<CacheManager>((ref) {
 final schedulerServiceProvider =
     Provider<SchedulerService>((ref) => SchedulerService());
 
-final wallpaperSetterProvider = Provider<WallpaperSetter>((ref) =>
-    Platform.isWindows ? WindowsWallpaperSetter() : StubWallpaperSetter());
+final wallpaperSetterProvider = Provider<WallpaperSetter>((ref) {
+  if (Platform.isWindows) return WindowsWallpaperSetter();
+  if (Platform.isLinux) return LinuxWallpaperSetter();
+  if (Platform.isMacOS) return MacosWallpaperSetter();
+  return StubWallpaperSetter();
+});
 
-final appNotifierProvider = Provider<AppNotifier>((ref) => Platform.isWindows
-    ? LocalNotifierAppNotifier()
-    : StubAppNotifier());
+final appNotifierProvider =
+    Provider<AppNotifier>((ref) => LocalNotifierAppNotifier());
 
-final protocolRegistrarProvider = Provider<ProtocolRegistrar>((ref) =>
-    Platform.isWindows
-        ? WindowsProtocolRegistrar()
-        : StubProtocolRegistrar());
+final protocolRegistrarProvider = Provider<ProtocolRegistrar>((ref) {
+  if (Platform.isWindows) return WindowsProtocolRegistrar();
+  if (Platform.isLinux) return LinuxProtocolRegistrar();
+  if (Platform.isMacOS) return MacosProtocolRegistrar();
+  return StubProtocolRegistrar();
+});
 
 // ── Settings ─────────────────────────────────────────────────────────────────
 
