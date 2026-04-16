@@ -48,6 +48,21 @@ class _GlassFormFieldState extends State<GlassFormField> {
   }
 
   @override
+  void didUpdateWidget(covariant GlassFormField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Only sync when we own the controller — external controllers are
+    // the parent's responsibility. Also ignore if the user has pending
+    // edits that haven't been committed yet (avoid clobbering typing).
+    if (_ownsController &&
+        widget.initialValue != oldWidget.initialValue &&
+        _controller.text == _lastCommitted) {
+      final next = widget.initialValue ?? '';
+      _controller.text = next;
+      _lastCommitted = next;
+    }
+  }
+
+  @override
   void dispose() {
     _focusNode.removeListener(_handleFocusChange);
     _focusNode.dispose();

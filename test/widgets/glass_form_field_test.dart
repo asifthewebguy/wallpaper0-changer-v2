@@ -58,5 +58,18 @@ void main() {
       final tf = tester.widget<TextField>(find.byType(TextField));
       expect(tf.obscureText, isTrue);
     });
+
+    testWidgets('updates displayed text when initialValue changes externally',
+        (tester) async {
+      Widget build(String value) => _wrap(GlassFormField(
+            label: 'Key',
+            initialValue: value,
+            onBlur: (_) {},
+          ));
+      await tester.pumpWidget(build('first'));
+      expect(find.text('first'), findsOneWidget);
+      await tester.pumpWidget(build('second'));
+      expect(find.text('second'), findsOneWidget);
+    });
   });
 }
