@@ -41,6 +41,7 @@ List<Override> _overrides() {
     discoverProvider.overrideWith(() => FakeDiscoverNotifier()),
     historyProvider.overrideWith(() => FakeHistoryNotifier()),
     scheduleProvider.overrideWith(() => FakeScheduleNotifier()),
+    scheduleCountdownProvider.overrideWith((ref) => const Stream<Duration>.empty()),
     allSourcesProvider.overrideWithValue({'aiwpme': src}),
     selectedSourceProvider.overrideWith((ref) => 'aiwpme'),
   ];

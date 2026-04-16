@@ -50,7 +50,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
       }
     });
     if (isEnabled) {
-      final interval = _currentInterval(value ?? _customInterval);
+      final interval = value ?? _customInterval;
       final notifier = ref.read(scheduleProvider.notifier);
       await notifier.disable();
       await notifier.enable(interval);

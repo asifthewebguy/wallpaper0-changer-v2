@@ -125,4 +125,19 @@ void main() {
     await tester.pumpAndSettle();
     verify(() => wallpaperService.setWallpaper(any(), any())).called(1);
   });
+
+  testWidgets('changing preset while enabled re-enables with new interval',
+      (tester) async {
+    notifier = FakeScheduleNotifier(
+      const ScheduleState(isEnabled: true, intervalMinutes: 30),
+    );
+    await tester.pumpWidget(wrap());
+    await tester.pumpAndSettle();
+    // Open dropdown and select 60
+    await tester.tap(find.byType(DropdownButton<int?>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('60 minutes').last);
+    await tester.pumpAndSettle();
+    expect(notifier.lastEnabledInterval, 60);
+  });
 }
