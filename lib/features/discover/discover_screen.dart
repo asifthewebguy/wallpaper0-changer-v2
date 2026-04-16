@@ -86,7 +86,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                 builder: (_) => WallpaperPreviewDialog(image: image),
               ),
               onLoadMore:
-                  ref.read(discoverProvider.notifier).loadMore,
+                  () => ref.read(discoverProvider.notifier).loadMore(),
             ),
             loading: () =>
                 const Center(child: CircularProgressIndicator()),
